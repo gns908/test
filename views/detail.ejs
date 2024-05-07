@@ -1,0 +1,54 @@
+<%- include('header.ejs') %>
+<main class="mw">
+    <h2>THE BLOG</h2>
+    <h3>상세페이지 </h3>
+    <div class="detail">
+        <h4><%= posts.title %></h4>
+        <p>홍길동님 / <%= posts.createAtDate %> / 좋아요 : 0</p>
+        <div class="img">
+            <% if(posts.postImgPath == null){ %>
+                <img src="/noimg.png" alt="이미지없음">
+            <% } else { %>
+                <img src="<%= posts.postImgPath %>" alt="<%= posts.title %>">
+            <% } %>
+        </div>
+        <div><%= posts.content %></div>
+    </div>
+    <div>
+        <button class="listBtn">목록으로</button>
+        <button class="editBtn">수정하기</button>
+        <button class="delBtn">삭제하기</button>
+        <button class="liketBtn">좋아요</button>
+    </div>
+</main>
+<script>
+    const listBtn = document.querySelector('.listBtn')
+    listBtn.addEventListener('click', ()=>{
+        location.href='/'
+    })
+
+    const editBtn = document.querySelector('.editBtn')
+    editBtn.addEventListener('click', ()=>{
+        location.href=`/edit/<%= posts._id %>`
+    })
+
+    const delBtn = document.querySelector('.delBtn')
+    delBtn.addEventListener('click', ()=>{
+        const postId = `<%= posts._id %>`
+        fetch(`/delete/${postId}`, {
+            method:'POST',
+            headers:{
+                'Content-type':'application/json',
+            },
+            body :JSON.stringify({_method: 'DELETE'})
+        }).then(res => {
+            console.log(res);
+            if(res.ok){
+                //삭제성공시
+                alert('삭제완료')
+                location.href = '/';
+            }
+        })
+    })
+</script>
+<%- include('footer.ejs') %>
